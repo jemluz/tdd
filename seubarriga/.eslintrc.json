@@ -16,6 +16,7 @@
         "eol-last": "off",
         "import/newline-after-import": "off",
         "arrow-parens": "off",
-        "max-len": "off"
+        "max-len": "off",
+        "comma-dangle": "off"
     }
 }

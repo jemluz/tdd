@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "1.18.3",
+    "consign": "0.1.6",
     "express": "4.16.4"
   },
   "devDependencies": {
@@ -18,7 +20,7 @@
     "test": "jest",
     "lint": "eslint src/** test/** --fix",
     "start": "node src/server.js",
-    "safe": "jest --watch"
+    "safe": "jest --watch --verbose=true"
   },
   "keywords": [],
   "author": "",
