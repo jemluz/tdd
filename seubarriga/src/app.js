@@ -2,6 +2,10 @@
 const app = require('express')()
 const consign = require('consign')
 
+const knex = require('knex')
+const knexfile = require('../knexfile')
+app.db = knex(knexfile)
+
 // cwd => especifica o diretorio padrao para o consign
 // verbose => omite a inicialização do consign
 consign({ cwd: 'src', verbose: false })
