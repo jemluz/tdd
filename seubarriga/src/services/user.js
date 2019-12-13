@@ -1,5 +1,4 @@
 module.exports = (app) => {
-
   // passa um parametro facultativo
   const findAll = (filter = {}) => {
     return app.db('users').where(filter).select()
@@ -11,7 +10,7 @@ module.exports = (app) => {
     if (!user.password) return { error: 'Senha é um campo obrigatório.' }
     
     const userDb = await findAll({ mail: user.mail })
-    if (userDb && userDb.length > 0) return { error: 'Já existe um usuário com esse email.'}
+    if (userDb && userDb.length > 0) return { error: 'Já existe um usuário com esse email.' }
 
     return app.db('users').insert(user, '*')
   }

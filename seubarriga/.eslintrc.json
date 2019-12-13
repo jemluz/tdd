@@ -17,6 +17,7 @@
         "import/newline-after-import": "off",
         "arrow-parens": "off",
         "max-len": "off",
-        "comma-dangle": "off"
+        "comma-dangle": "off",
+        "no-trailing-spaces": "off"
     }
 }
