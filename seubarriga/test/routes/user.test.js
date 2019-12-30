@@ -12,12 +12,12 @@ test('Deve listar todos os usuários', () => {
     })
 })
 
-test('Deve inserir usuário com sucesso', () => {
+test('Deve inserir usuário', () => {
   return request(app).post('/users')
     .send({ name: 'Walter Mitty', mail, password: '123' })
     .then(res => {
       expect(res.status).toBe(201)
-      // expect(res.body.name).toBe(nu)
+      expect(res.body.name).toBe('Walter Mitty')
     })
 })
 

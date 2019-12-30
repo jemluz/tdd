@@ -1,10 +1,10 @@
 module.exports = {
   test: {
-    client: 'mysql',
+    client: 'postgresql',
     connection: {
       host: 'localhost',
       database: 'barriga',
-      user: 'root',
+      user: 'postgres',
       password: 'admin'
     },
     migrations: {
