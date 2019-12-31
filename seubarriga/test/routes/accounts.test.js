@@ -61,6 +61,20 @@ test('Deve remover uma conta', () => {
     })
 })
 
-// test('Não deve inserir uma conta sem nome', () => {
+test('Não deve inserir uma conta sem nome', () => {
+  return request(app).post(MAIN_ROUTE)
+    .send({ user_id: user.id })
+    .then(result => {
+      expect(result.status).toBe(400)
+      expect(result.body.error).toBe('Nome é um campo obrigatório.')
+    })
+})
 
-// })
+// testes futuros
+test.skip('Não deve inserir uma conta de nome duplicado, para um mesmo usuário.', () => {})
+test.skip('Deve listar apenas as contas do usuário.', () => { 
+  // esse teste irá substituir a listagem de todas as contas, que é uma falha de segurança pois possibilita brechas para usuários manipularem contas que não são as suas 
+})
+test.skip('Não deve retornar uma conta de outro usuário.', () => {})
+test.skip('Não deve alterar uma conta de outro usuário.', () => {})
+test.skip('Não deve remover uma conta de outro usuário.', () => {})

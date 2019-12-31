@@ -24,7 +24,7 @@ test('Deve inserir usuário', () => {
 // test com request
 test('Não deve inserir usuário sem nome', () => {
   return request(app).post('/users')
-    .send({ mail: 'walter@mail.com', password: '123456'})
+    .send({ mail: 'walter@mail.com', password: '123456' })
     .then(res => {
       expect(res.status).toBe(400)
       expect(res.body.error).toBe('Nome é um campo obrigatório.')

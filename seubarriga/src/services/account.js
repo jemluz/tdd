@@ -1,5 +1,8 @@
+const ValidationError = require('../errors/ValidationError')
+
 module.exports = app => {
   const save = async (account) => {
+    if (!account.name) throw new ValidationError('Nome é um campo obrigatório.')
     // * retorna todos os dados inseridos no banco
     return app.db('accounts').insert(account, '*')
   }
@@ -18,7 +21,7 @@ module.exports = app => {
       .update(account, '*')
   }
 
-  const remove = (id, account) => {
+  const remove = (id) => {
     return app.db('accounts')
       .where({ id })
       .del()
