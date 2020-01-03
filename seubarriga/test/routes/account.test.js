@@ -106,8 +106,52 @@ test('Deve remover uma conta', () => {
     })
 })
 
-// testes futuros
-test.skip('Não deve inserir uma conta de nome duplicado, para um mesmo usuário.', () => {})
-test.skip('Não deve retornar uma conta de outro usuário.', () => {})
-test.skip('Não deve alterar uma conta de outro usuário.', () => {})
-test.skip('Não deve remover uma conta de outro usuário.', () => {})
+test('Não deve inserir uma conta de nome duplicado, para um mesmo usuário.', () => {
+  return app.db('accounts')
+    .insert({ name: 'Acc duplicada', user_id: user.id })
+    .then(() => request(app)
+      .post(MAIN_ROUTE)
+      .set('authorization', `bearer ${user.token}`)
+      .send({ name: 'Acc duplicada' }))
+    .then(res => {
+      expect(res.status).toBe(400)
+      expect(res.body.error).toBe('Já existe uma conta com esse nome.')
+    })
+})
+
+test('Não deve retornar uma conta de outro usuário.', () => {
+  return app.db('accounts')
+    .insert({ name: 'Acc User #2', user_id: user2.id }, ['id'])
+    .then(acc => request(app)
+      .get(`${MAIN_ROUTE}/${acc[0].id}`)
+      .set('authorization', `bearer ${user.token}`))
+    .then(res => {
+      expect(res.status).toBe(403)
+      expect(res.body.error).toBe('O usuário não tem permissão para acessar esse recurso.')
+    })
+})
+
+test('Não deve alterar uma conta de outro usuário.', () => {
+  return app.db('accounts')
+    .insert({ name: 'Acc User #2', user_id: user2.id }, ['id'])
+    .then(acc => request(app)
+      .put(`${MAIN_ROUTE}/${acc[0].id}`)
+      .send({ name: 'Acc Updated' })
+      .set('authorization', `bearer ${user.token}`))
+    .then(res => {
+      expect(res.status).toBe(403)
+      expect(res.body.error).toBe('O usuário não tem permissão para acessar esse recurso.')
+    })
+})
+
+test('Não deve remover uma conta de outro usuário.', () => {
+  return app.db('accounts')
+    .insert({ name: 'Acc User #2', user_id: user2.id }, ['id'])
+    .then(acc => request(app)
+      .delete(`${MAIN_ROUTE}/${acc[0].id}`)
+      .set('authorization', `bearer ${user.token}`))
+    .then(res => {
+      expect(res.status).toBe(403)
+      expect(res.body.error).toBe('O usuário não tem permissão para acessar esse recurso.')
+    })
+})
