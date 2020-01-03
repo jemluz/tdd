@@ -10,7 +10,8 @@ app.db = knex(knexfile.test)
 // cwd => especifica o diretorio padrao para o consign
 // verbose => omite a inicialização do consign
 consign({ cwd: 'src', verbose: false })
-  .include('./config/middlewares.js')
+  .include('./config/passport.js')
+  .then('./config/middlewares.js')
   .then('./services')
   .then('./routes')
   .then('./config/routes.js')
