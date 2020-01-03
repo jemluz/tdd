@@ -4,6 +4,8 @@ const app = require('../../src/app')
 const jwt = require('jwt-simple') 
 const secret = 'Segredo!'
 
+const MAIN_ROUTE = '/v1/users'
+
 const mail = `${Date.now()}@mail.com`
 let user
 
@@ -13,8 +15,9 @@ beforeAll(async () => {
   user.token = jwt.encode(user, secret)
 })
 
+// TESTES DA API -----------------------------------------------------------------------------------------------------
 test('Deve listar todos os usuários', () => {
-  return request(app).get('/users')
+  return request(app).get(MAIN_ROUTE)
     .set('authorization', `bearer ${user.token}`)
     .then(res => {
       expect(res.status).toBe(200)
@@ -24,7 +27,7 @@ test('Deve listar todos os usuários', () => {
 })
 
 test('Deve inserir usuário', () => {
-  return request(app).post('/users')
+  return request(app).post(MAIN_ROUTE)
     .send({ name: 'Walter Mitty', mail, password: '123' })
     .set('authorization', `bearer ${user.token}`)
     .then(res => {
@@ -35,7 +38,7 @@ test('Deve inserir usuário', () => {
 })
 
 test('Deve armazenar senha criptografada', async () => {
-  const res = await request(app).post('/users')
+  const res = await request(app).post(MAIN_ROUTE)
     .send({ name: 'Walter Mitty', mail: `${Date.now()}@gmail.com`, password: '123' })
     .set('authorization', `bearer ${user.token}`)
 
@@ -43,13 +46,14 @@ test('Deve armazenar senha criptografada', async () => {
 
   const { id } = res.body
   const userDB = await app.services.user.findOne({ id })
+
   expect(userDB.password).not.toBeUndefined()
   expect(userDB.password).not.toBe('123')
 })
 
 // test com request
 test('Não deve inserir usuário sem nome', () => {
-  return request(app).post('/users')
+  return request(app).post(MAIN_ROUTE)
     .send({ mail: 'walter@mail.com', password: '123456' })
     .set('authorization', `bearer ${user.token}`)
     .then(res => {
@@ -60,8 +64,8 @@ test('Não deve inserir usuário sem nome', () => {
 
 // teste com chamada assincrona
 test('Não deve inserir usuário sem email', async () => {
-  const result = await request(app).post('/users')
-    .send({ name: 'Walter Mitty', password: '123456'})
+  const result = await request(app).post(MAIN_ROUTE)
+    .send({ name: 'Walter Mitty', password: '123456' })
     .set('authorization', `bearer ${user.token}`)
 
   expect(result.status).toBe(400)
@@ -70,7 +74,7 @@ test('Não deve inserir usuário sem email', async () => {
 
 // teste com done
 test('Não deve inserir usuário sem senha', (done) => {
-  request(app).post('/users')
+  request(app).post(MAIN_ROUTE)
     .send({ name: 'Walter Mitty', mail: 'walter@mail.com' })
     .set('authorization', `bearer ${user.token}`)
     .then(res => {
@@ -81,7 +85,7 @@ test('Não deve inserir usuário sem senha', (done) => {
 })
 
 test('Não deve inserir usuário com email existente', () => {
-  return request(app).post('/users')
+  return request(app).post(MAIN_ROUTE)
     .send({ name: 'Walter Mitty', mail, password: '123' })
     .set('authorization', `bearer ${user.token}`)
     .then(res => {
@@ -89,3 +93,5 @@ test('Não deve inserir usuário com email existente', () => {
       expect(res.body.error).toBe('Já existe um usuário com esse email.')
     })
 })
+
+// TESTES DO BANCO ---------------------------------------------------------------------------------------------------

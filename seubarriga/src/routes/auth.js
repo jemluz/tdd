@@ -36,5 +36,5 @@ module.exports = app => {
     }
   })
 
-  return { authRouter }
+  return authRouter 
 }

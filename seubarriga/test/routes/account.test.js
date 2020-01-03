@@ -4,18 +4,24 @@ const app = require('../../src/app')
 const jwt = require('jwt-simple') 
 const secret = 'Segredo!'
 
-const MAIN_ROUTE = '/accounts'
+const MAIN_ROUTE = '/v1/accounts'
 let user
+let user2
 
-beforeAll(async () => {
+// beforeEache/All são metodos reservados executados antes dos testes
+beforeEach(async () => {
   const res = await app.services.user.save({ name: 'User Account', mail: `${Date.now()}@mail.com`, password: '123' })
   user = { ...res[0] }
   user.token = jwt.encode(user, secret)
+
+  const res2 = await app.services.user.save({ name: 'User Account #2', mail: `${Date.now()}@mail.com`, password: '123' })
+  user2 = { ...res2[0] }
 })
 
+// TESTES DA API -----------------------------------------------------------------------------------------------------
 test('Deve inserir uma conta', () => {
   return request(app).post(MAIN_ROUTE)
-    .send({ name: 'Acc #1', user_id: user.id })
+    .send({ name: 'Acc #1' })
     .set('authorization', `bearer ${user.token}`)
     .then(res => {
       expect(res.status).toBe(201)
@@ -23,7 +29,18 @@ test('Deve inserir uma conta', () => {
     })
 })
 
-test('Deve listar todas as contas', () => {
+test('Não deve inserir uma conta sem nome', () => {
+  return request(app).post(MAIN_ROUTE)
+    .send({ })
+    .set('authorization', `bearer ${user.token}`)
+    .then(result => {
+      expect(result.status).toBe(400)
+      expect(result.body.error).toBe('Nome é um campo obrigatório.')
+    })
+})
+
+// TESTES DO BANCO ---------------------------------------------------------------------------------------------------
+test.skip('Deve listar todas as contas', () => {
   return app.db('accounts')
     .insert({ name: 'Acc List', user_id: user.id })
     .then(() => request(app)
@@ -32,6 +49,23 @@ test('Deve listar todas as contas', () => {
     .then(res => {
       expect(res.status).toBe(200)
       expect(res.body.length).toBeGreaterThan(0)
+    })
+})
+
+// esse teste irá substituir o "Deve listar todas as contas"
+test('Deve listar apenas as contas do usuário.', () => { 
+  return app.db('accounts')
+    .insert([
+      { name: 'Acc User #1', user_id: user.id },
+      { name: 'Acc User #2', user_id: user2.id }
+    ])
+    .then(() => request(app)
+      .get(MAIN_ROUTE)
+      .set('authorization', `bearer ${user.token}`))
+    .then(res => {
+      expect(res.status).toBe(200)
+      expect(res.body.length).toBe(1)
+      expect(res.body[0].name).toBe('Acc User #1')
     })
 })
 
@@ -72,21 +106,8 @@ test('Deve remover uma conta', () => {
     })
 })
 
-test('Não deve inserir uma conta sem nome', () => {
-  return request(app).post(MAIN_ROUTE)
-    .send({ user_id: user.id })
-    .set('authorization', `bearer ${user.token}`)
-    .then(result => {
-      expect(result.status).toBe(400)
-      expect(result.body.error).toBe('Nome é um campo obrigatório.')
-    })
-})
-
 // testes futuros
 test.skip('Não deve inserir uma conta de nome duplicado, para um mesmo usuário.', () => {})
-test.skip('Deve listar apenas as contas do usuário.', () => { 
-  // esse teste irá substituir a listagem de todas as contas, que é uma falha de segurança pois possibilita brechas para usuários manipularem contas que não são as suas 
-})
 test.skip('Não deve retornar uma conta de outro usuário.', () => {})
 test.skip('Não deve alterar uma conta de outro usuário.', () => {})
 test.skip('Não deve remover uma conta de outro usuário.', () => {})

@@ -5,7 +5,7 @@ test('Deve receber token ao logar', () => {
   const mail = `${Date.now()}@mail.com`
 
   return app.services.user.save({ name: 'Walter', mail, password: '123'})
-    .then(() =>  request(app)
+    .then(() => request(app)
       .post('/auth/signin')
       .send({ mail, password: '123' }))
     .then(res => {
@@ -37,7 +37,7 @@ test('Não deve autenticar usuário inexistente', () => {
 })
 
 test('Não deve acessar uma rota protegida sem token', () => {
-  return request(app).get('/users')
+  return request(app).get('/v1/users')
     .then(res => {
       // 401 alguem não autenticado tentando acessar a aplicação
       expect(res.status).toBe(401)

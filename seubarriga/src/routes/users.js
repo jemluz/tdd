@@ -19,5 +19,5 @@ module.exports = (app) => {
     }
   })
 
-  return { usersRouter }
+  return usersRouter
 }
