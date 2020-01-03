@@ -36,7 +36,7 @@ test('Não deve autenticar usuário inexistente', () => {
     })
 })
 
-test('Não deve acessar uma rotta protegida sem token', () => {
+test('Não deve acessar uma rota protegida sem token', () => {
   return request(app).get('/users')
     .then(res => {
       // 401 alguem não autenticado tentando acessar a aplicação
