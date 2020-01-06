@@ -19,6 +19,7 @@
         "max-len": "off",
         "comma-dangle": "off",
         "no-trailing-spaces": "off",
-        "import/order": "off"
+        "import/order": "off",
+        "object-curly-newline": "off"
     }
 }

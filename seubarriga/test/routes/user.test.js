@@ -10,7 +10,10 @@ const mail = `${Date.now()}@mail.com`
 let user
 
 beforeAll(async () => {
-  const res = await app.services.user.save({ name: 'User Account', mail: `${Date.now()}@mail.com`, password: '123'})
+  const res = await app.services.user.save(
+    { name: 'User Account', mail: `${Date.now()}@mail.com`, password: '123' }
+  )
+  
   user = { ...res[0] }
   user.token = jwt.encode(user, secret)
 })
