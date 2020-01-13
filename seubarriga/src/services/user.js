@@ -4,7 +4,7 @@ const ValidationError = require('../errors/ValidationError')
 module.exports = (app) => {
   // passa um parametro facultativo
   const findAll = () => {
-    return app.db('users').select([ 'id', 'name', 'mail'])
+    return app.db('users').select(['id', 'name', 'mail'])
   }
 
   const findOne = (filter = {}) => {
@@ -28,7 +28,7 @@ module.exports = (app) => {
 
     const newUser = { ...user }
     newUser.password = getPassHash(user.password)
-    return app.db('users').insert(newUser, [ 'id', 'name', 'mail'])
+    return app.db('users').insert(newUser, ['id', 'name', 'mail'])
   }
 
   return { findAll, findOne, save }

@@ -15,9 +15,7 @@ module.exports = app => {
 
   accountsRouter.post('/', async (req, res, next) => {
     app.services.account.save({ ...req.body, user_id: req.user.id })
-      .then(result => { 
-        return res.status(201).json(result[0])
-      })
+      .then(result => res.status(201).json(result[0]))
       .catch(err => next(err))
   })
 

@@ -7,5 +7,28 @@ module.exports = app => {
       .select()
   }
 
-  return { find }
+  const findOne = (filter) => {
+    return app.db('transactions')
+      .where(filter)
+      .first()
+  }
+
+  const save = (transaction) => {
+    return app.db('transactions')
+      .insert(transaction, '*')
+  }
+  
+  const update = (id, transaction) => {
+    return app.db('transactions')
+      .where({ id })
+      .update(transaction, '*')
+  }
+
+  const remove = (id) => {
+    return app.db('transactions')
+      .where({ id })
+      .del()
+  }
+
+  return { find, findOne, save, update, remove }
 }
