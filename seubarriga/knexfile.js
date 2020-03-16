@@ -9,9 +9,6 @@ module.exports = {
     },
     migrations: {
       diretory: 'src/migrations'
-    },
-    seeds: {
-      diretory: 'src/seeds'
     }
   }
 }
